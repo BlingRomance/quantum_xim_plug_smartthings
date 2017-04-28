@@ -15,8 +15,8 @@ const request = require('request');
 
 /**
  * for xim interface
- * @param  {object}   option   input xim_content
- * @param  {Function} callback return light list
+ * @param  {object}   option   input plug url and token
+ * @param  {Function} callback return plug list
  */
 function discovery(options, callback) {
   const opt = {
@@ -31,6 +31,7 @@ function discovery(options, callback) {
     const jsonObj = JSON.parse(body);
     const list = {};
     list.switches = [];
+
     if (error) {
       throw new Error(error);
     } else {
@@ -39,7 +40,6 @@ function discovery(options, callback) {
           list.switches.push(jsonObj.switches[i]);
         }
       }
-
       callback(list);
     }
   });

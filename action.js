@@ -11,16 +11,29 @@
 
 'use strict';
 
+const request = require('request');
+
 /**
  * [action description]
- * @param  {object} option Light action properties
+ * @param  {object} option Plug action properties
  * @return {bool}        seccess or fail
  */
-function action(option, callback) {
-  const callback_option = JSON.parse(JSON.stringify(option));
-  // this is an empty function to be implemented or a place holder
+function action(options, callback) {
+  const opt = {
+    method: 'PUT',
+    url: `${options.api_endpoint}/things/${options.command}`,
+    headers: {
+      Authorization: `Bearer ${options.api_token}`,
+    },
+  };
 
-  callback(callback_option);
+  request(opt, (error, response) => {
+    if (response.statusCode === 204) {
+      callback('OK');
+    } else {
+      throw new Error(error);
+    }
+  });
 }
 
 /**
