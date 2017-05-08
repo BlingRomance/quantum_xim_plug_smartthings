@@ -21,9 +21,9 @@ const request = require('request');
 function action(options, callback) {
   const opt = {
     method: 'PUT',
-    url: `${options.api_endpoint}/things/${options.command}`,
+    url: `${options.xim_content.uri}/outletAction/${options.device_id}/${options.command}`,
     headers: {
-      Authorization: `Bearer ${options.api_token}`,
+      Authorization: `Bearer ${options.xim_content.access_token}`,
     },
   };
 

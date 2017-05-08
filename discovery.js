@@ -21,27 +21,30 @@ const request = require('request');
 function discovery(options, callback) {
   const opt = {
     method: 'GET',
-    url: `${options.api_endpoint}/things`,
+    url: `${options.xim_content.uri}/outletDiscovery`,
     headers: {
-      Authorization: `Bearer ${options.api_token}`,
+      Authorization: `Bearer ${options.xim_content.access_token}`,
     },
   };
 
   request(opt, (error, response, body) => {
-    const jsonObj = JSON.parse(body);
-    const list = {};
-    list.switches = [];
+    const result = JSON.parse(body);
+    const callback_option = JSON.parse(JSON.stringify(options));
+    callback_option.list = [];
 
-    if (error) {
-      throw new Error(error);
-    } else {
-      for (let i = 0; i < jsonObj.switches.length; i += 1) {
-        if (jsonObj.switches[i].switch != null) {
-          list.switches.push(jsonObj.switches[i]);
-        }
+    Object.keys(result.outlets).forEach((key) => {
+      const plug = {};
+      plug.plug_status = {};
+      plug.device_name = result.outlets[key].label;
+      plug.device_id = result.outlets[key].id;
+      if (result.outlets[key].outlet === 'on') {
+        plug.plug_status.onoff = true;
+      } else {
+        plug.plug_status.onoff = false;
       }
-      callback(list);
-    }
+      callback_option.list.push(plug);
+    });
+    callback(callback_option);
   });
 }
 
